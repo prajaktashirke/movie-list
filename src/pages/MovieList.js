@@ -1,53 +1,30 @@
-import React, { Fragment } from "react";
+import axios from "axios";
+import React, { Fragment, useEffect, useState } from "react";
+import { Card, Col, Row } from "react-bootstrap";
+import GridView from "../component/GridView";
+import MovieCardView from "../component/MovieCardView";
 
 const MovieList = () => {
-    console.log("into list")
-    return <Fragment>"MovieList page"</Fragment>
-//     <form>
-//     <div className="form-outline mb-4">
-//       <input type="email" id="form2Example1" className="form-control" />
-//       <label className="form-label" for="form2Example1">Email address</label>
-//     </div>
-  
-//     <div className="form-outline mb-4">
-//       <input type="password" id="form2Example2" className="form-control" />
-//       <label className="form-label" for="form2Example2">Password</label>
-//     </div>
-//     <div className="row mb-4">
-//       <div className="col d-flex justify-content-center">
-//         <div className="form-check">
-//           <input className="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-//           <label className="form-check-label" for="form2Example31"> Remember me </label>
-//         </div>
-//       </div>
-  
-//       <div className="col">
-//         <a href="#!">Forgot password?</a>
-//       </div>
-//     </div>
-  
-//     <button type="button" className="btn btn-primary btn-block mb-4">Sign in</button>
-  
-//     <div className="text-center">
-//       <p>Not a member? <a href="#!">Register</a></p>
-//       <p>or sign up with:</p>
-//       <button type="button" className="btn btn-link btn-floating mx-1">
-//         <i className="fab fa-facebook-f"></i>
-//       </button>
-  
-//       <button type="button" className="btn btn-link btn-floating mx-1">
-//         <i className="fab fa-google"></i>
-//       </button>
-  
-//       <button type="button" className="btn btn-link btn-floating mx-1">
-//         <i className="fab fa-twitter"></i>
-//       </button>
-  
-//       <button type="button" className="btn btn-link btn-floating mx-1">
-//         <i className="fab fa-github"></i>
-//       </button>
-//     </div>
-//   </form>
+    const [popularMovies, setPopularMovies] = useState([]);
+    const getMovieList = () => {
+        let link = `${process.env.REACT_APP_MOVIEDB_LINK}?api_key=${process.env.REACT_APP_MOVIEDB_API_KEY}`;
+        axios.get(link)
+            .then(res => {
+                setPopularMovies(res?.data?.results)
+            })
+
+    }
+    useEffect(() => {
+        getMovieList()
+    }, [])
+    return <Fragment>
+        <GridView movies={popularMovies}/>
+        <Row lg={5}>
+            {(popularMovies || []).map(movie => {
+                return <MovieCardView movie={movie} />
+            })}
+        </Row>
+    </Fragment>
 }
 
 export default MovieList;
